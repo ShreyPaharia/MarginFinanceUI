@@ -57,15 +57,31 @@ export default function Header({
           goTo("/");
         }}
       >
+        Dashboard
+      </button>
+      <button
+        className={`link ${pathname === "/market" ? "selected" : ""}`}
+        onClick={() => {
+          goTo("/market");
+        }}
+      >
         Market
       </button>
       <button
-        className={`link ${pathname === "/dashboard" ? "selected" : ""}`}
+        className={`link ${pathname === "/trade" ? "selected" : ""}`}
         onClick={() => {
-          goTo("/dashboard");
+          goTo("/trade");
         }}
       >
-        Dashboard
+        Trade
+      </button>
+      <button
+        className={`link ${pathname === "/liquidityProvider" ? "selected" : ""}`}
+        onClick={() => {
+          goTo("/liquidityProvider");
+        }}
+      >
+        Liquidity Provider
       </button>
       <button
         className={`link ${pathname === "/yeild" ? "selected" : ""}`}

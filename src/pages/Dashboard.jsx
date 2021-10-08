@@ -86,7 +86,7 @@ export default function Dashboard({
                 <thead>
                   <tr>
                     <th>Market</th>
-                    <th>Size (JPY)</th>
+                    <th>Size</th>
                     <th>Entry Price</th>
                     <th>Market Price</th>
                     <th>Margin</th>

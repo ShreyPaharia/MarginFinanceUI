@@ -19,7 +19,11 @@ export default {
         address: "0xe22da380ee6b445bb8273c81944adeb6e8450422"
       },
       {
-        name: "aUSDC",
+        name: "ETH",
+        address: "0xe22da380ee6b445bb8273c81944adeb6e8450422"
+      },
+      {
+        name: "BTC",
         address: "0xe12afec5aa12cf614678f9bfeeb98ca9bb95b5b0"
       }
     ]

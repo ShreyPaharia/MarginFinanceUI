@@ -12,7 +12,7 @@
 
     ant-table-expanded-row button {
       line-height: 1.1rem;
-      background: $green;
+      background: $green !important;
       border: none;
       border-radius: 10px;
       color: white;
@@ -27,7 +27,7 @@
 
     button {
       line-height: 1.1rem;
-      background: $green;
+      background: $green !important;
       border: none;
       border-radius: 10px;
       color: white;
@@ -38,9 +38,9 @@
       width: 100%;
       max-width: 200px;
 
-      // &.red {
-      //   background: $red;
-      // }
+      &.red {
+        background: $red !important;
+      }
     }
   }
 }

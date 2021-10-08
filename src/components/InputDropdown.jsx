@@ -10,19 +10,19 @@ export default function InputDropdown({
 }) {
   const [coin, setCoin] = useState(coins[0]);
 
-  const changeCoin = name => {
-    let newCoin = coins.filter(coin => coin.name === name)[0];
-    setCoin(newCoin);
-  };
+  // const changeCoin = name => {
+  //   let newCoin = coins.filter(coin => coin.name === name)[0];
+  //   setCoin(newCoin);
+  // };
 
   // Trigger onChange for any value/coin change
-  useEffect(() => {
-    if (coin) {
-      onChange({
-        ...coin
-      });
-    }
-  }, [coin, onChange]);
+  // useEffect(() => {
+  //   if (coin) {
+  //     onChange({
+  //       ...coin
+  //     });
+  //   }
+  // }, [coin, onChange]);
 
   // Reset value on coin change
 
@@ -37,9 +37,7 @@ export default function InputDropdown({
             <select
               id="coin-select"
               disabled={disabled}
-              onChange={e => {
-                changeCoin(e.nativeEvent.target.value);
-              }}
+              onChange={onChange}
             >
               {coins.map(({ name }) => (
                 <option value={name} key={name}>

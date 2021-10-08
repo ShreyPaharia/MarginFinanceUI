@@ -6,7 +6,7 @@ import useWeb3Modal from "./hooks/useWeb3Modal";
 import abi from "./contracts/Perpetual.abi";
 import contractAddress from "./contracts/Perpetual.address";
 import { Header } from "./components";
-import { Market, Dashboard, LandingPage, Yeild } from "./pages";
+import { Market, Dashboard, LandingPage, LiquidityProvider, Trade, Yeild } from "./pages";
 import useContractBalances from "./hooks/useContractBalances";
 
 import "./App.scss";
@@ -70,7 +70,7 @@ function App() {
   return (
     <div className="app">
       <Router>
-        <Route path="/" exact>
+        <Route path="/market" exact>
           <Header
             address={userAddress}
             provider={provider}
@@ -87,7 +87,24 @@ function App() {
             contractBalances={contractBalances}
           />
         </Route>
-        <Route path="/dashboard" exact>
+        <Route path="/trade" exact>
+          <Header
+            address={userAddress}
+            provider={provider}
+            loadWeb3Modal={loadWeb3Modal}
+            logoutOfWeb3Modal={logoutOfWeb3Modal}
+          />
+          <Trade
+            provider={provider}
+            loadWeb3Modal={loadWeb3Modal}
+            logoutOfWeb3Modal={logoutOfWeb3Modal}
+            perpetualContract={perpetualContract}
+            userAddress={userAddress}
+            network={network}
+            contractBalances={contractBalances}
+          />
+        </Route>
+        <Route path="/" exact>
           <Header
             address={userAddress}
             provider={provider}
@@ -102,6 +119,23 @@ function App() {
             userAddress={userAddress}
             network={network}
             contractBalances={contractBalances}
+          />
+        </Route>
+        <Route path="/liquidityProvider" exact>
+          <Header
+            address={userAddress}
+            provider={provider}
+            loadWeb3Modal={loadWeb3Modal}
+            logoutOfWeb3Modal={logoutOfWeb3Modal}
+          />
+          <LiquidityProvider
+          provider={provider}
+          loadWeb3Modal={loadWeb3Modal}
+          logoutOfWeb3Modal={logoutOfWeb3Modal}
+          perpetualContract={perpetualContract}
+          userAddress={userAddress}
+          network={network}
+          contractBalances={contractBalances}
           />
         </Route>
         <Route path="/yeild" exact>

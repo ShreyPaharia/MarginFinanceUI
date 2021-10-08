@@ -1,62 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import { formatUnits, parseEther } from "@ethersproject/units";
 import addresses from "../utils/addresses";
-import { Container, TransferWidget, NoWallet, InputDropdown } from "../components";
+import { Container, TransferYeild, NoWallet, InputField } from "../components";
 import useContractBalances from "../hooks/useContractBalances";
-import "./Dashboard.scss";
-import { Collapse, Table } from 'antd';
-
-const { Panel } = Collapse;
-const coinsList = [
-  {
-    name: "BTC",
-    balance: 100
-  },
-  {
-    name: "ETH",
-    balance: 100
-  },
-  {
-    name: "AAVE",
-    balance: 100
-  },
-  {
-    name: "SOL",
-    balance: 100
-  },
-  {
-    name: "LINK",
-    balance: 100
-  }
-]
-
-const data = [{ t1: "BTC", t2: "0", t3: "0", t4: "12", t5: "0.785%", t6: "45K" }, { t1: "SOL", t2: "0", t3: "0", t4: "22", t5: "0.9895%", t6: "52K" }];
-const col = [
-  {
-    dataIndex: "t1",
-    title: "Asset"
-  },
-  {
-    dataIndex: "t2",
-    title: "Wallet"
-  },
-  {
-    dataIndex: "t3",
-    title: "Deposited"
-  },
-  {
-    dataIndex: "t4",
-    title: "APY"
-  },
-  {
-    dataIndex: "t5",
-    title: "Daily"
-  },
-  {
-    dataIndex: "t6",
-    title: "TVL"
-  }
-];
+import "./Yeild.scss";
 
 export default function Yeild({
   provider,
@@ -77,6 +24,32 @@ export default function Yeild({
     pnl,
     marginRatio
   } = contractBalances;
+  const [minPrice, setMinPrice] = useState();
+  const [maxPrice, setMaxPrice] = useState();
+
+  const redeemLong = () => {
+    perpetualContract
+      .RedeemLongQuote(addresses[network.name].supportedCollateral[0].address)
+      .then(result => {
+        console.log("Closed Position Successfully", result);
+      })
+      .catch(err => {
+        console.error("Couldn't Close Position", err);
+      });
+  };
+  const redeemShort = () => {
+    perpetualContract
+      .RedeemShortQuote(addresses[network.name].supportedCollateral[0].address)
+      .then(result => {
+        console.log("Closed Position Successfully", result);
+      })
+      .catch(err => {
+        console.error("Couldn't Close Position", err);
+      });
+  };
+
+  const submit = () => {
+  };
 
   const formatShares = shares => {
     return Number(shares)
@@ -85,43 +58,82 @@ export default function Yeild({
       .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   };
 
-  const Expander = props => <span>Test expander</span>;
-
   return (
     <div className="dashboard-container">
       {provider ? (
-        <div className="dashboard-content">
+        <div className="yeild-content">
           <div className="row">
-            <InputDropdown
-                  coins={coinsList}
-                  title="Assets"
-                  // fixedValue={Number(portfolio)}
-                  onChange={() => {}}
+            <TransferYeild
+              perpetualContract={perpetualContract}
+              provider={provider}
+              addresses={addresses}
+              userAddress={userAddress}
+              network={network}
+              contractBalances={contractBalances}
+            />
+            <Container className="holdings" title="Select Price Range">
+              <InputField
+                  filedValue={minPrice}
+                  title="Min Price"
+                  fixedValue={Number(portfolio)}
+                  onChange={setMinPrice}
                 />
 
+              <InputField
+                    filedValue={maxPrice}
+                    title="Max Price"
+                    fixedValue={Number(portfolio)}
+                    onChange={setMaxPrice}
+                    // display={false}
+                  />
+
+              <div className="row">
+                <button onClick={submit} >
+                  Submit
+                </button>
+              </div>
+            </Container>
           </div>
           <div className="row">
-            <Container className="positions" title="Assets">
-            <Table
-              dataSource={data}
-              columns={col}
-              expandedRowRender={row => <TransferWidget
-                                            perpetualContract={perpetualContract}
-                                            provider={provider}
-                                            addresses={addresses}
-                                            userAddress={userAddress}
-                                            network={network}
-                                            contractBalances={contractBalances}
-                                          />}
-              expandRowByClick
-              onRow={record => ({
-                onClick: e => {
-                  /* Call some endPoint to log this click event */
-                  console.log(`user clicked on row ${record.t1}!`);
-                }
-              })}
-            />
-
+            <Container className="positions" title="Open Positions">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Market</th>
+                    <th>Size</th>
+                    <th>Entry Price</th>
+                    <th>Market Price</th>
+                    <th>Margin</th>
+                    <th>PNL</th>
+                    <th>Close</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {(Number(shorts) > 0 || Number(longs) > 0) && (
+                    <tr>
+                      <td>JPY/USD</td>
+                      <td>
+                        {Number(shorts) > 0
+                          ? formatShares(shorts)
+                          : formatShares(longs)}
+                      </td>
+                      <td>{parseFloat(entryPrice).toFixed(8)}</td>
+                      <td>{parseFloat(poolPrice).toFixed(8)}</td>
+                      <td>{marginRatio}</td>
+                      <td>{parseFloat(pnl).toFixed(2)}</td>
+                      <td>
+                        <button
+                          onClick={
+                            Number(shorts) > 0 ? redeemShort : redeemLong
+                          }
+                        >
+                          Close
+                        </button>
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
             </Container>
           </div>
         </div>

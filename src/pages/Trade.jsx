@@ -4,7 +4,7 @@ import { BigNumber } from "@ethersproject/bignumber";
 import { Form, Row, Col, Button, List } from "antd";
 import TradingViewWidget, { Themes } from "react-tradingview-widget";
 import "./Market.scss";
-import { IFSlider, CoinInput, NoWallet } from "../components";
+import { IFSlider, CoinInput, NoWallet, InputDropdown, InputField } from "../components";
 import useChainlinkPrice from "../hooks/useChainlinkPrice";
 import useContractBalances from "../hooks/useContractBalances";
 
@@ -20,24 +20,35 @@ export default function Market({
   const [isLong, setIsLong] = useState(true);
   const [leverage, setLeverage] = useState(5);
   const [symbol, setSymbol] = useState("ETHBTC");
+  const [limitPrice, setLimitPrice] = useState("ETHBTC");
+  const [amt, setAmt] = useState("ETHBTC");
+  const [actionType, setActionType] = useState("Limit");
+  const [showLimit, setShowLimit] = useState(false);
   const [poolPrice, setPoolPrice] = useState();
   const price = useChainlinkPrice("JPY", provider);
   const { shorts, longs, portfolio } = contractBalances;
   const coinsList = [
     {
-      name: "BTC",
+      name: "ETHBTC",
       balance: 100
     },
     {
-      name: "ETH",
+      name: "ETHUSD",
       balance: 100
     },
     {
-      name: "USDC",
+      name: "BTCUSD",
       balance: 100
     },
-]
-
+  ];
+  const limitMarket = [
+    {
+      name: "Limit",
+    },
+    {
+      name: "Market",
+    },
+  ];
   const Symbols = { "ETHBTC": "ETHBTC" };
   const formatPoolPrice = price => {
     if (price) {
@@ -59,6 +70,17 @@ export default function Market({
         });
     }
   }, [perpetualContract]);
+
+
+  useEffect(() => {
+    if (actionType=='Limit') {
+      setShowLimit(true);
+    } else {
+      setShowLimit(false);
+    }
+    console.log(" actionType ", actionType, " - ", showLimit);
+
+  }, [actionType]);
 
   const openPosition = () => {
     if (perpetualContract && leverage && portfolio && portfolio > 0) {
@@ -91,47 +113,38 @@ export default function Market({
           <>
             <div>
               <p>
-                Market Details
+                Trade Details
               </p>
             </div>
             <div className="long-short-box">
             </div>
             <Form>
-            <Form.Item>
-                <CoinInput
+              <Form.Item>
+              <InputDropdown
                   coins={coinsList}
-                  title="From"
-                  fixedValue={Number(portfolio)}
+                  title="Assets"
                   onChange={() => {}}
                 />
               </Form.Item>
               <Form.Item>
-                <CoinInput
-                  coins={coinsList}
-                  title="To"
-                  fixedValue={Number(portfolio)}
-                  onChange={() => {}}
+              <InputDropdown
+                  coins={limitMarket}
+                  title="Action"
+                  onChange={setActionType}
                 />
               </Form.Item>
-              <Row gutter={[40, 16]}>
-                <Col span={6} />
-                <Col span={6} />
-                <Col span={6} />
-                <Col span={6} />
-                <Col span={6} />
-                <Col span={6} />
-                <Col span={6} />
-                <Col span={6} />
-              </Row>
+              <Form.Item style={showLimit ? '' : { display: 'none'} }>
+              <InputField
+                  filedValue={limitPrice}
+                  title="Limit Amt"
+                  fixedValue={Number(portfolio)}
+                  onChange={() => {}}
+                  // display={false}
+                />
+              </Form.Item>
               <Form.Item>
-                <CoinInput
-                  coins={[
-                    {
-                      name: "USD",
-                      balance: 100
-                    }
-                  ]}
-                  disabled
+                <InputField
+                  filedValue={amt}
                   title="Collateral"
                   fixedValue={Number(portfolio)}
                   onChange={() => {}}
