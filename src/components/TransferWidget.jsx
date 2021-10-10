@@ -9,7 +9,7 @@ import "./TransferWidget.scss";
 export default function TransferWidget({
   provider,
   addresses,
-  perpetualContract,
+  appContract,
   userAddress,
   network,
   contractBalances
@@ -25,7 +25,7 @@ export default function TransferWidget({
       withdrawalCoin.value <= withdrawalCoin.balance &&
       withdrawalCoin.value > 0
     ) {
-      perpetualContract
+      appContract
         .withdraw(parseEther(withdrawalCoin.value), withdrawalCoin.address)
         .then(result => {
           console.log("Withdrawal Successful!", result);
@@ -42,7 +42,7 @@ export default function TransferWidget({
       let amount = parseUnits(depositCoin.value, 6);
       approve(provider, depositCoin.address, amount, userAddress)
         .then(info => {
-          perpetualContract
+          appContract
             .deposit(amount, depositCoin.address)
             .then(result => {
               setDepositing(false);

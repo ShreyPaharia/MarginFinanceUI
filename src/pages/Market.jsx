@@ -12,7 +12,7 @@ export default function Market({
   provider,
   loadWeb3Modal,
   logoutOfWeb3Modal,
-  perpetualContract,
+  appContract,
   userAddress,
   network,
   contractBalances
@@ -48,8 +48,8 @@ export default function Market({
   };
 
   useEffect(() => {
-    if (perpetualContract) {
-      perpetualContract
+    if (appContract) {
+      appContract
         .getPoolPrice()
         .then(result => {
           setPoolPrice(result.toString());
@@ -58,12 +58,12 @@ export default function Market({
           console.error(err);
         });
     }
-  }, [perpetualContract]);
+  }, [appContract]);
 
   const openPosition = () => {
-    if (perpetualContract && leverage && portfolio && portfolio > 0) {
+    if (appContract && leverage && portfolio && portfolio > 0) {
       if (isLong) {
-        perpetualContract
+        appContract
           .MintLongWithLeverage(leverage)
           .then(() => {
             console.log("Successfully Minted Long!");
@@ -72,7 +72,7 @@ export default function Market({
             console.error(err);
           });
       } else {
-        perpetualContract
+        appContract
           .MintShortWithLeverage(leverage)
           .then(() => {
             console.log("Successfully Minted Short!");

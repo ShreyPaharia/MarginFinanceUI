@@ -9,7 +9,7 @@ export default function Dashboard({
   provider,
   loadWeb3Modal,
   logoutOfWeb3Modal,
-  perpetualContract,
+  appContract,
   userAddress,
   network,
   contractBalances
@@ -25,8 +25,11 @@ export default function Dashboard({
     marginRatio
   } = contractBalances;
 
+  const Initialize = () => {
+  };
+
   const redeemLong = () => {
-    perpetualContract
+    appContract
       .RedeemLongQuote(addresses[network.name].supportedCollateral[0].address)
       .then(result => {
         console.log("Closed Position Successfully", result);
@@ -36,7 +39,7 @@ export default function Dashboard({
       });
   };
   const redeemShort = () => {
-    perpetualContract
+    appContract
       .RedeemShortQuote(addresses[network.name].supportedCollateral[0].address)
       .then(result => {
         console.log("Closed Position Successfully", result);
@@ -72,7 +75,7 @@ export default function Dashboard({
               </div>
             </Container>
             <TransferWidget
-              perpetualContract={perpetualContract}
+              appContract={appContract}
               provider={provider}
               addresses={addresses}
               userAddress={userAddress}
@@ -80,6 +83,11 @@ export default function Dashboard({
               contractBalances={contractBalances}
             />
           </div>
+          <div className="row">
+                <button onClick={Initialize} >
+                  Initialize
+                </button>
+              </div>
           <div className="row">
             <Container className="positions" title="Open Positions">
               <table>

@@ -10,7 +10,7 @@ import "./TransferWidget.scss";
 export default function TransferYeild({
   provider,
   addresses,
-  perpetualContract,
+  appContract,
   userAddress,
   network,
   contractBalances
@@ -41,7 +41,7 @@ export default function TransferYeild({
       withdrawalCoin.value <= withdrawalCoin.balance &&
       withdrawalCoin.value > 0
     ) {
-      perpetualContract
+      appContract
         .withdraw(parseEther(withdrawalCoin.value), withdrawalCoin.address)
         .then(result => {
           console.log("Withdrawal Successful!", result);
@@ -58,7 +58,7 @@ export default function TransferYeild({
       let amount = parseUnits(depositCoin.value, 6);
       approve(provider, depositCoin.address, amount, userAddress)
         .then(info => {
-          perpetualContract
+          appContract
             .deposit(amount, depositCoin.address)
             .then(result => {
               setDepositing(false);

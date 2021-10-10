@@ -18,9 +18,9 @@ function App() {
   const [provider, loadWeb3Modal, logoutOfWeb3Modal] = useWeb3Modal();
   const [userAddress, setUserAddress] = useState(null);
   const [network, setNetwork] = useState(null);
-  const [perpetualContract, setPerpetualContract] = useState();
+  const [appContract, setAppContract] = useState();
   const contractBalances = useContractBalances(
-    perpetualContract,
+    appContract,
     userAddress,
     network
   );
@@ -29,7 +29,7 @@ function App() {
     let subscribed = true;
 
     if (provider) {
-      setPerpetualContract(
+      setAppContract(
         new Contract(contractAddress, abi, provider.getSigner())
       );
       provider
@@ -52,8 +52,8 @@ function App() {
   useEffect(() => {
     const signer = provider?.getSigner();
     if (signer) {
-      if (perpetualContract) {
-        setPerpetualContract(perpetualContract.connect(signer));
+      if (appContract) {
+        setAppContract(appContract.connect(signer));
       }
 
       signer
@@ -81,7 +81,7 @@ function App() {
             provider={provider}
             loadWeb3Modal={loadWeb3Modal}
             logoutOfWeb3Modal={logoutOfWeb3Modal}
-            perpetualContract={perpetualContract}
+            appContract={appContract}
             userAddress={userAddress}
             network={network}
             contractBalances={contractBalances}
@@ -98,7 +98,7 @@ function App() {
             provider={provider}
             loadWeb3Modal={loadWeb3Modal}
             logoutOfWeb3Modal={logoutOfWeb3Modal}
-            perpetualContract={perpetualContract}
+            appContract={appContract}
             userAddress={userAddress}
             network={network}
             contractBalances={contractBalances}
@@ -115,7 +115,7 @@ function App() {
             provider={provider}
             loadWeb3Modal={loadWeb3Modal}
             logoutOfWeb3Modal={logoutOfWeb3Modal}
-            perpetualContract={perpetualContract}
+            appContract={appContract}
             userAddress={userAddress}
             network={network}
             contractBalances={contractBalances}
@@ -132,7 +132,7 @@ function App() {
           provider={provider}
           loadWeb3Modal={loadWeb3Modal}
           logoutOfWeb3Modal={logoutOfWeb3Modal}
-          perpetualContract={perpetualContract}
+          appContract={appContract}
           userAddress={userAddress}
           network={network}
           contractBalances={contractBalances}
@@ -149,7 +149,7 @@ function App() {
           provider={provider}
           loadWeb3Modal={loadWeb3Modal}
           logoutOfWeb3Modal={logoutOfWeb3Modal}
-          perpetualContract={perpetualContract}
+          appContract={appContract}
           userAddress={userAddress}
           network={network}
           contractBalances={contractBalances}

@@ -63,7 +63,7 @@ export default function LiquidityProvider({
   provider,
   loadWeb3Modal,
   logoutOfWeb3Modal,
-  perpetualContract,
+  appContract,
   userAddress,
   network,
   contractBalances
@@ -107,7 +107,7 @@ export default function LiquidityProvider({
               expandable={{
                     expandedRowRender: record => (
                       <TransferWidget
-                                            perpetualContract={perpetualContract}
+                                            appContract={appContract}
                                             provider={provider}
                                             addresses={addresses}
                                             userAddress={userAddress}

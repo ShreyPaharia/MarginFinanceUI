@@ -3,7 +3,7 @@ import { formatEther } from "@ethersproject/units";
 import addresses from "../utils/addresses";
 
 export default function useContractBalances(
-  perpetualContract,
+  appContract,
   userAddress,
   network
 ) {
@@ -23,7 +23,7 @@ export default function useContractBalances(
       coins.push({
         ...coin,
         balance: formatEther(
-          await perpetualContract.getReserveBalance(userAddress, coin.address)
+          await appContract.getReserveBalance(userAddress, coin.address)
         ),
       });
     }
@@ -31,9 +31,9 @@ export default function useContractBalances(
   };
 
   const initListeners = () => {
-    perpetualContract.on("Deposit", (value, user, asset) => {
+    appContract.on("Deposit", (value, user, asset) => {
       if (user === userAddress) {
-        perpetualContract
+        appContract
           .getPortfolioValue(userAddress)
           .then((result) => formatEther(result))
           .then((result) => {
@@ -47,9 +47,9 @@ export default function useContractBalances(
         });
       }
     });
-    perpetualContract.on("Withdraw", (value, user, asset) => {
+    appContract.on("Withdraw", (value, user, asset) => {
       if (user === userAddress) {
-        perpetualContract
+        appContract
           .getPortfolioValue(userAddress)
           .then((result) => formatEther(result))
           .then((result) => {
@@ -63,8 +63,8 @@ export default function useContractBalances(
         });
       }
     });
-    perpetualContract.on(["sellQuoteLong", "buyQuoteLong"], (result) => {
-      perpetualContract
+    appContract.on(["sellQuoteLong", "buyQuoteLong"], (result) => {
+      appContract
         .getLongBalance(userAddress)
         .then((result) => formatEther(result))
         .then((result) => {
@@ -73,7 +73,7 @@ export default function useContractBalances(
         .catch((err) => {
           console.error(err);
         });
-      perpetualContract
+      appContract
         .getUserMarginRatio(userAddress)
         .then((result) => formatEther(result))
         .then((result) => {
@@ -82,7 +82,7 @@ export default function useContractBalances(
         .catch((err) => {
           console.error(err);
         });
-      perpetualContract
+      appContract
         .getUnrealizedPnL(userAddress)
         .then(([amount, isPositive]) =>
           isPositive ? formatEther(amount) : -formatEther(amount)
@@ -93,7 +93,7 @@ export default function useContractBalances(
         .catch((err) => {
           console.error(err);
         });
-      perpetualContract
+      appContract
         .getEntryPrice(userAddress)
         .then((result) => formatEther(result))
         .then((result) => {
@@ -103,8 +103,8 @@ export default function useContractBalances(
           console.error(err);
         });
     });
-    perpetualContract.on(["sellQuoteShort", "buyQuoteShort"], (result) => {
-      perpetualContract
+    appContract.on(["sellQuoteShort", "buyQuoteShort"], (result) => {
+      appContract
         .getShortBalance(userAddress)
         .then((result) => formatEther(result))
         .then((result) => {
@@ -113,7 +113,7 @@ export default function useContractBalances(
         .catch((err) => {
           console.error(err);
         });
-      perpetualContract
+      appContract
         .getUserMarginRatio(userAddress)
         .then((result) => formatEther(result))
         .then((result) => {
@@ -122,7 +122,7 @@ export default function useContractBalances(
         .catch((err) => {
           console.error(err);
         });
-      perpetualContract
+      appContract
         .getUnrealizedPnL(userAddress)
         .then(([amount, isPositive]) =>
           isPositive ? formatEther(amount) : -formatEther(amount)
@@ -133,7 +133,7 @@ export default function useContractBalances(
         .catch((err) => {
           console.error(err);
         });
-      perpetualContract
+      appContract
         .getEntryPrice(userAddress)
         .then((result) => formatEther(result))
         .then((result) => {
@@ -150,34 +150,34 @@ export default function useContractBalances(
 
     try {
       result.shorts = formatEther(
-        await perpetualContract.getShortBalance(userAddress)
+        await appContract.getShortBalance(userAddress)
       );
     } catch (err) {
       console.error(err);
     }
     try {
       result.longs = formatEther(
-        await perpetualContract.getLongBalance(userAddress)
+        await appContract.getLongBalance(userAddress)
       );
     } catch (err) {
       console.error(err);
     }
     try {
       result.portfolio = formatEther(
-        await perpetualContract.getPortfolioValue(userAddress)
+        await appContract.getPortfolioValue(userAddress)
       );
     } catch (err) {
       console.error(err);
     }
     try {
       result.marginRatio = formatEther(
-        await perpetualContract.getUserMarginRatio(userAddress)
+        await appContract.getUserMarginRatio(userAddress)
       );
     } catch (err) {
       console.error(err);
     }
     try {
-      const [pnlAmount, isPositive] = await perpetualContract.getUnrealizedPnL(
+      const [pnlAmount, isPositive] = await appContract.getUnrealizedPnL(
         userAddress
       );
       result.pnl = isPositive
@@ -188,13 +188,13 @@ export default function useContractBalances(
     }
     try {
       result.entryPrice = formatEther(
-        await perpetualContract.getEntryPrice(userAddress)
+        await appContract.getEntryPrice(userAddress)
       );
     } catch (err) {
       console.error(err);
     }
     try {
-      result.poolPrice = formatEther(await perpetualContract.getPoolPrice());
+      result.poolPrice = formatEther(await appContract.getPoolPrice());
     } catch (err) {
       console.error(err);
     }
@@ -210,7 +210,7 @@ export default function useContractBalances(
   useEffect(() => {
     let subscribed = true;
     if (
-      perpetualContract &&
+      appContract &&
       userAddress &&
       network &&
       addresses[network.name] &&
@@ -237,11 +237,11 @@ export default function useContractBalances(
 
     return () => {
       subscribed = false;
-      if (perpetualContract) {
-        perpetualContract.removeAllListeners();
+      if (appContract) {
+        appContract.removeAllListeners();
       }
     };
-  }, [perpetualContract, userAddress, network]);
+  }, [appContract, userAddress, network]);
 
   return {
     poolPrice,

@@ -9,7 +9,7 @@ export default function Yeild({
   provider,
   loadWeb3Modal,
   logoutOfWeb3Modal,
-  perpetualContract,
+  appContract,
   userAddress,
   network,
   contractBalances
@@ -28,7 +28,7 @@ export default function Yeild({
   const [maxPrice, setMaxPrice] = useState();
 
   const redeemLong = () => {
-    perpetualContract
+    appContract
       .RedeemLongQuote(addresses[network.name].supportedCollateral[0].address)
       .then(result => {
         console.log("Closed Position Successfully", result);
@@ -38,7 +38,7 @@ export default function Yeild({
       });
   };
   const redeemShort = () => {
-    perpetualContract
+    appContract
       .RedeemShortQuote(addresses[network.name].supportedCollateral[0].address)
       .then(result => {
         console.log("Closed Position Successfully", result);
@@ -64,7 +64,7 @@ export default function Yeild({
         <div className="yeild-content">
           <div className="row">
             <TransferYeild
-              perpetualContract={perpetualContract}
+              appContract={appContract}
               provider={provider}
               addresses={addresses}
               userAddress={userAddress}
